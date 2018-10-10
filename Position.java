@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Position
 {
+	// represents a tuple <page p, word position i>.
 	PageEntry p;
 	int wordIndex;
 	
@@ -9,6 +10,13 @@ public class Position
 	{
 		this.p = p;
 		this.wordIndex = wordIndex;
+	}
+	
+	public boolean equals(Position pos)
+	{
+		if(this == pos) return true;
+		if(pos == null) return false;
+		return (p.equals(pos.p) && wordIndex == pos.wordIndex);
 	}
 	
 	public PageEntry getPageEntry()
