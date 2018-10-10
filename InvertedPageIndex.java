@@ -22,12 +22,20 @@ public class InvertedPageIndex
 	MySet<PageEntry> getPagesWhichContainWord(String str)
 	{
 		MySet<PageEntry> page_entries = new MySet<PageEntry>();
-		MyLinkedList<Position>.Node tmp = hashTable.searchWord(str).getAllPositionsForThisWord().head;
+		WordEntry entry = hashTable.searchWord(str);
+		if(entry == null) return page_entries;
+		MyLinkedList<Position>.Node tmp = entry.getAllPositionsForThisWord().head;
 		while(tmp != null)
 		{
-			page_entries.addElement(tmp.obj.getPageEntry());
+			try { page_entries.addElement(tmp.obj.getPageEntry()); }
+			catch(RuntimeException e) {}
 			tmp = tmp.next;
 		}
 		return page_entries;
+	}
+	
+	WordEntry getEntryFromWord(String str)
+	{
+		return hashTable.searchWord(str);
 	}
 }

@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class MySet<X>
 {
 	MyLinkedList<X> set;
@@ -50,5 +48,10 @@ public class MySet<X>
 			temp = temp.next;
 		}
 		return intersection;
+	}
+	
+	int size()
+	{
+		return set.size();
 	}
 }

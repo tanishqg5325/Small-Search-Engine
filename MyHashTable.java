@@ -5,9 +5,10 @@ public class MyHashTable
 	int size;
 	MyLinkedList<WordEntry>[] hashTable;
 	
+	@SuppressWarnings("unchecked")
 	public MyHashTable()
 	{
-		size = 100;
+		size = 200;
 		hashTable = new MyLinkedList[size];
 	}
 	
@@ -56,6 +57,7 @@ public class MyHashTable
 		{
 			if(tmp.obj.getWord().equals(str))
 				return tmp.obj;
+			tmp = tmp.next;
 		}
 		return null;
 	}

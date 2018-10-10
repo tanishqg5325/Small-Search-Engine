@@ -12,8 +12,9 @@ public class checker
 		try {
 			String actionString;
 			br = new BufferedReader(new FileReader("actions.txt"));
-
-			while ((actionString = br.readLine()) != null) {
+			while ((actionString = br.readLine()) != null)
+			{
+				//System.out.println(actionString);
 				r.performAction(actionString);
 			}
 		} catch (IOException e) {

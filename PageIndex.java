@@ -1,4 +1,3 @@
-// done
 public class PageIndex
 {
 	// stores one word-entry for each unique word in the document.
@@ -14,11 +13,12 @@ public class PageIndex
 		MyLinkedList<WordEntry>.Node temp = words.head;
 		while(temp != null)
 		{
-			if(temp.obj.word.equals(str))
+			if(temp.obj.getWord().equals(str))
 			{
 				try { temp.obj.addPosition(p); return; }
 				catch(RuntimeException ex) { throw ex; }
 			}
+			temp = temp.next;
 		}
 		WordEntry new_word = new WordEntry(str);
 		new_word.addPosition(p);

@@ -1,8 +1,7 @@
-import java.util.*;
-
 public class MyLinkedList<X>
 {
 	Node head;
+	int size;
 	class Node
 	{
 		X obj;
@@ -12,6 +11,11 @@ public class MyLinkedList<X>
 			obj = o;
 			next = prev = null;
 		}
+	}
+	
+	public MyLinkedList()
+	{
+		size = 0;
 	}
 	
 	public boolean IsEmpty()
@@ -31,9 +35,24 @@ public class MyLinkedList<X>
 		return false;
 	}
 	
+	public boolean IsMember1(X o)
+	{
+		Node temp = head;
+		while(temp != null)
+		{
+			//System.out.println(((PageEntry)(temp.obj)).getName());
+			//System.out.println(temp.obj.getClass());
+			if(o.equals(temp.obj))
+				return true;
+			temp = temp.next;
+		}
+		return false;
+	}
+	
 	public void Insert(X o)
 	{
 		Node tmp = new Node(o);
+		size++;
 		if(head==null)
 		{
 			head = tmp;
@@ -57,6 +76,7 @@ public class MyLinkedList<X>
 				if(temp.prev != null) temp.prev.next = t;
 				else head = t;
 				if(t != null) t.prev = temp.prev;
+				size--;
 				return;
 			}
 			temp = temp.next;
@@ -66,13 +86,6 @@ public class MyLinkedList<X>
 	
 	public int size()
 	{
-		Node tmp = head;
-		int count = 0;
-		while(tmp != null)
-		{
-			count++;
-			tmp = tmp.next;
-		}
-		return count;
+		return size;
 	}
 }
