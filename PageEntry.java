@@ -6,6 +6,7 @@ public class PageEntry
 	// store the the information related to a webpage.
 	String pageName;
 	PageIndex index;
+	int number_of_words;
 	MySet<String> connectorWords = new MySet<String>();
 	
 	// Read this file, and create the page index.
@@ -13,6 +14,7 @@ public class PageEntry
 	{
 		this.pageName = pageName;
 		index = new PageIndex();
+		number_of_words = 0;
 		connectorWords.addElement("a"); connectorWords.addElement("an"); connectorWords.addElement("the"); connectorWords.addElement("they");
 		connectorWords.addElement("these"); connectorWords.addElement("this"); connectorWords.addElement("for"); connectorWords.addElement("is");
 		connectorWords.addElement("are"); connectorWords.addElement("was"); connectorWords.addElement("of"); connectorWords.addElement("or");
@@ -39,6 +41,7 @@ public class PageEntry
 							else if(words[i].equals("applications")) words[i] = "application";
 							Position p = new Position(this, wordIndex);
 							index.addPositionForWord(words[i],p);
+							number_of_words++;
 						}
 						wordIndex++;
 					}
@@ -48,11 +51,12 @@ public class PageEntry
 		catch ( FileNotFoundException e) { throw new RuntimeException("Error - File not found"); }
 	}
 	
-	public boolean equals(PageEntry page)
+	public boolean equals(Object page)
 	{
-		if(this == page) return true;
-		if(page == null) return false;
-		return  page.getName().equals(pageName);
+		PageEntry entry = (PageEntry)page;
+		if(this == entry) return true;
+		if(entry == null) return false;
+		return  pageName.equals(entry.getName());
 	}
 	
 	public String getName()
@@ -65,8 +69,27 @@ public class PageEntry
 		return index;
 	}
 	
-	public float getRelevanceOfPage(String str)
+	public float getTermFrequency(String word)
 	{
-		
+		MyLinkedList<WordEntry>.Node tmp = index.getWordEntries().head;
+		WordEntry wordEntry = null;
+		while(tmp != null)
+		{
+			if(tmp.obj.getWord().equals(word))
+			{
+				wordEntry = tmp.obj;
+				break;
+			}
+			tmp = tmp.next;
+		}
+		if(wordEntry == null) return 0;
+		MyLinkedList<Position>.Node pos = wordEntry.getAllPositionsForThisWord().head;
+		int fwp = 0;
+		while(pos != null)
+		{
+			if(pos.obj.getPageEntry().equals(this)) fwp++; 
+			pos = pos.next;
+		}
+		return ((float)(fwp))/number_of_words;
 	}
 }

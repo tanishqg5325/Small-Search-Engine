@@ -35,20 +35,6 @@ public class MyLinkedList<X>
 		return false;
 	}
 	
-	public boolean IsMember1(X o)
-	{
-		Node temp = head;
-		while(temp != null)
-		{
-			//System.out.println(((PageEntry)(temp.obj)).getName());
-			//System.out.println(temp.obj.getClass());
-			if(o.equals(temp.obj))
-				return true;
-			temp = temp.next;
-		}
-		return false;
-	}
-	
 	public void Insert(X o)
 	{
 		Node tmp = new Node(o);

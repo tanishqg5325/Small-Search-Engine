@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class WordEntry
 {
 	// For a string str, this class stores the list
@@ -13,11 +11,12 @@ public class WordEntry
 		entry = new MyLinkedList<Position>();
 	}
 	
-	public boolean equals(WordEntry w)
+	public boolean equals(Object w)
 	{
-		if(this == w) return true;
-		if(w == null) return false;
-		return (word.equals(w.getWord()));
+		WordEntry entry = (WordEntry)w;
+		if(this == entry) return true;
+		if(entry == null) return false;
+		return word.equals(entry.getWord());
 	}
 	
 	void addPosition(Position position)
@@ -50,9 +49,4 @@ public class WordEntry
 	{
 		return entry;
 	}
-	
-	/*float getTermFrequency(String word)
-	{
-		
-	}*/
 }
