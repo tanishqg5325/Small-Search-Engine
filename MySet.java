@@ -1,6 +1,6 @@
 public class MySet<X>
 {
-	MyLinkedList<X> set;
+	private MyLinkedList<X> set;
 	
 	public MySet()
 	{
@@ -28,7 +28,7 @@ public class MySet<X>
 			union.addElement(temp.obj);
 			temp = temp.next;
 		}
-		temp = otherSet.set.head;
+		temp = otherSet.getElements().head;
 		while(temp != null)
 		{
 			try { union.addElement(temp.obj); }
@@ -48,6 +48,11 @@ public class MySet<X>
 			temp = temp.next;
 		}
 		return intersection;
+	}
+	
+	MyLinkedList<X> getElements()
+	{
+		return set;
 	}
 	
 	int size()

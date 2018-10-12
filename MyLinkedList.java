@@ -1,6 +1,6 @@
 public class MyLinkedList<X>
 {
-	Node head;
+	Node head, tail;
 	int size;
 	class Node
 	{
@@ -41,14 +41,12 @@ public class MyLinkedList<X>
 		size++;
 		if(head==null)
 		{
-			head = tmp;
+			head = tail = tmp;
 			return;
 		}
-		Node n = head;
-		while(n.next != null)
-			n = n.next;
-		tmp.prev = n;
-		n.next = tmp;
+		tail.next = tmp;
+		tmp.prev = tail;
+		tail = tmp;
 	}
 	
 	public void Delete(X o)
@@ -62,6 +60,7 @@ public class MyLinkedList<X>
 				if(temp.prev != null) temp.prev.next = t;
 				else head = t;
 				if(t != null) t.prev = temp.prev;
+				else tail = temp.prev;
 				size--;
 				return;
 			}
@@ -73,5 +72,17 @@ public class MyLinkedList<X>
 	public int size()
 	{
 		return size;
+	}
+	
+	MyLinkedList<X> Clone()
+	{
+		MyLinkedList<X> new_list = new MyLinkedList<X>();
+		Node tmp = head;
+		while(tmp != null)
+		{
+			new_list.Insert(tmp.obj);
+			tmp = tmp.next;
+		}
+		return new_list;
 	}
 }

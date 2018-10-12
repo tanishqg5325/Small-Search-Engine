@@ -2,13 +2,13 @@ public class MyHashTable
 {
 	// implements the hashtable used by the InvertedPageIndex.
 	// It maps a word to its word-entry.
-	int size;
-	MyLinkedList<WordEntry>[] hashTable;
+	private int size;
+	private MyLinkedList<WordEntry>[] hashTable;
 	
 	@SuppressWarnings("unchecked")
 	public MyHashTable()
 	{
-		size = 200;
+		size = 1000;
 		hashTable = new MyLinkedList[size];
 	}
 	
@@ -16,9 +16,13 @@ public class MyHashTable
 	// hashtable. The implementation of hashtable supports chaining.
 	private int getHashIndex(String str)
 	{
-		int code = str.hashCode();
-        code = Math.abs(code);
-        return code % size;
+		int n = str.length(), a = 1, code = 0;
+		for(int i=0;i<n;i++)
+		{
+			code = (code + str.charAt(i)*a) % size;
+			a = (a * 41) % size;
+		}
+        return code;
 	}
 	
 	// This adds an entry to the hashtable: stringName(w) - > positionList(w). If no word-entry
@@ -30,7 +34,7 @@ public class MyHashTable
 		if(hashTable[index] == null)
 		{
 			hashTable[index] = new MyLinkedList<WordEntry>();
-			hashTable[index].Insert(w);
+			hashTable[index].Insert(w.Clone());
 		}
 		else
 		{
@@ -44,7 +48,7 @@ public class MyHashTable
 				}
 				tmp = tmp.next;
 			}
-			hashTable[index].Insert(w);
+			hashTable[index].Insert(w.Clone());
 		}
 	}
 	

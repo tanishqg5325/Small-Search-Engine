@@ -1,8 +1,8 @@
 public class Position
 {
 	// represents a tuple <page p, word position i>.
-	PageEntry p;
-	int wordIndex;
+	private PageEntry p;
+	private int wordIndex;
 	
 	public Position(PageEntry p, int wordIndex)
 	{
@@ -15,7 +15,7 @@ public class Position
 		Position tmp = (Position)pos;
 		if(this == tmp) return true;
 		if(tmp == null) return false;
-		return (p.equals(tmp.p) && wordIndex == tmp.wordIndex);
+		return (p.equals(tmp.getPageEntry()) && wordIndex == tmp.getWordIndex());
 	}
 	
 	public PageEntry getPageEntry()

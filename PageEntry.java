@@ -1,13 +1,13 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class PageEntry
 {
 	// store the the information related to a webpage.
-	String pageName;
-	PageIndex index;
-	int number_of_words;
-	MySet<String> connectorWords = new MySet<String>();
+	private String pageName;
+	private PageIndex index;
+	private int number_of_words;
+	private MySet<String> connectorWords = new MySet<String>();
 	
 	// Read this file, and create the page index.
 	public PageEntry(String pageName)
@@ -48,7 +48,7 @@ public class PageEntry
 				}
 			}
 		}
-		catch ( FileNotFoundException e) { throw new RuntimeException("Error - File not found"); }
+		catch (FileNotFoundException e) { throw new RuntimeException("Error - File not found"); }
 	}
 	
 	public boolean equals(Object page)
@@ -83,13 +83,9 @@ public class PageEntry
 			tmp = tmp.next;
 		}
 		if(wordEntry == null) return 0;
-		MyLinkedList<Position>.Node pos = wordEntry.getAllPositionsForThisWord().head;
-		int fwp = 0;
-		while(pos != null)
-		{
-			if(pos.obj.getPageEntry().equals(this)) fwp++; 
-			pos = pos.next;
-		}
+		int fwp = wordEntry.getAllPositionsForThisWord().size();
+		//if(word.equals("function"))
+			//System.out.println(pageName + " " + fwp + " " + number_of_words);
 		return ((float)(fwp))/number_of_words;
 	}
 }

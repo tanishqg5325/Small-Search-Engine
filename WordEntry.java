@@ -2,8 +2,8 @@ public class WordEntry
 {
 	// For a string str, this class stores the list
 	// of word indice's where str is present in the document(s).
-	String word;
-	MyLinkedList<Position> entry; 
+	private String word;
+	private MyLinkedList<Position> entry; 
 	
 	public WordEntry(String word)
 	{
@@ -48,5 +48,12 @@ public class WordEntry
 	MyLinkedList<Position> getAllPositionsForThisWord()
 	{
 		return entry;
+	}
+	
+	WordEntry Clone()
+	{
+		WordEntry new_word = new WordEntry(word);
+		new_word.entry = entry.Clone();
+		return new_word;
 	}
 }

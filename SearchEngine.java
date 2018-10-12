@@ -2,8 +2,8 @@ import java.util.Vector;
 
 public class SearchEngine
 {
-	InvertedPageIndex ipi;
-	MySet<PageEntry> pages;
+	private InvertedPageIndex ipi;
+	private MySet<PageEntry> pages;
 	
 	public SearchEngine()
 	{
@@ -40,7 +40,7 @@ public class SearchEngine
 	
 	MyLinkedList<PageEntry> getSortedResults(MySet<PageEntry> webPages, String word)
 	{
-		MyLinkedList<PageEntry>.Node tmp = webPages.set.head;
+		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
 		MyLinkedList<PageRelevance> page_relevances = new MyLinkedList<PageRelevance>();
 		float inv_doc_freq = getInverseDocumentFrequency(word);
 		float rel = tmp.obj.getTermFrequency(word) * inv_doc_freq;
@@ -52,6 +52,7 @@ public class SearchEngine
 			start = page_relevances.head;
 			rel = tmp.obj.getTermFrequency(word) * inv_doc_freq;
 			MyLinkedList<PageRelevance>.Node pr = page_relevances.new Node(new PageRelevance(tmp.obj, rel));
+			page_relevances.size++;
 			if(rel >= start.obj.getRelevance())
 			{
 				pr.next = start;
@@ -77,16 +78,41 @@ public class SearchEngine
 		return ans;
 	}
 	
+	boolean contains(MySet<PageEntry> pgs, String doc)
+	{
+		MyLinkedList<PageEntry>.Node tmp = pgs.getElements().head;
+		while(tmp != null)
+		{
+			if(tmp.obj.getName().equals(doc))
+				return true;
+			tmp = tmp.next;
+		}
+		return false;
+	}
+	
 	void performAction(String actionMessage)
 	{
 		String[] query = actionMessage.split("\\s");
 		if(query.length == 2 && query[0].equals("addPage"))
 		{
-			PageEntry webPage = new PageEntry(query[1]);
-			ipi.addPage(webPage);
-			pages.addElement(webPage);
+			if(contains(pages, query[1]))
+			{
+				System.out.println("Webpage " + query[1] + " already added");
+				return;
+			}
+			try
+			{
+				PageEntry webPage = new PageEntry(query[1]);
+				ipi.addPage(webPage);
+				pages.addElement(webPage);
+			}
+			catch(RuntimeException e)
+			{
+				System.out.println("Webpage " + query[1] + " not found");
+				return;
+			}	
 		}
-		
+
 		else if(query.length == 2 && query[0].equals("queryFindPagesWhichContainWord"))
 		{
 			String x = query[1];
@@ -109,15 +135,12 @@ public class SearchEngine
 		else if(query.length == 3 && query[0].equals("queryFindPositionsOfWordInAPage"))
 		{
 			String word = processString(query[1]), document = query[2];
-			PageEntry temp = new PageEntry(document);
-			if(!pages.IsMember(temp))
+			if(!contains(pages, document))
 			{
 				System.out.println("No webpage " + document + " found");
 				return;
 			}
 			WordEntry wordEntry = ipi.getEntryFromWord(word);
-			//if(word.equals("stack"))
-				//System.out.println(wordEntry.getAllPositionsForThisWord().size());
 			if(wordEntry == null)
 			{
 				System.out.println("Webpage " + document + " does not contain word " + word);
@@ -143,6 +166,6 @@ public class SearchEngine
 		}
 		
 		else
-			System.out.println(actionMessage + ": Error - Invalid Input");
+			System.out.println("Error - Invalid Input");
 	}
 }

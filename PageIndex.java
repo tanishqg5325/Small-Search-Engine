@@ -1,7 +1,7 @@
 public class PageIndex
 {
 	// stores one word-entry for each unique word in the document.
-	MyLinkedList<WordEntry> words;
+	private MyLinkedList<WordEntry> words;
 	
 	public PageIndex()
 	{

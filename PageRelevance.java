@@ -1,7 +1,7 @@
 public class PageRelevance
 {
-	PageEntry page;
-	float relevance;
+	private PageEntry page;
+	private float relevance;
 	
 	public PageRelevance(PageEntry p, float f)
 	{

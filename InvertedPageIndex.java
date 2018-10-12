@@ -1,6 +1,6 @@
 public class InvertedPageIndex
 {
-	MyHashTable hashTable;
+	private MyHashTable hashTable;
 	
 	public InvertedPageIndex()
 	{
