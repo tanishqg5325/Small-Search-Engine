@@ -31,7 +31,6 @@ public class PageEntry
 				String[] words = str.split("\\s++|\\{|}|[|]|<|>|\\(|\\)|\\.|,|;|'|\"|\\?|#|!|-|:");
 				int size = words.length;
 				for(int i=0;i<size;i++)
-				{
 					if(words[i].length() > 0)
 					{
 						if(!connectorWords.IsMember(words[i]))
@@ -45,7 +44,6 @@ public class PageEntry
 						}
 						wordIndex++;
 					}
-				}
 			}
 		}
 		catch (FileNotFoundException e) { throw new RuntimeException("Error - File not found"); }

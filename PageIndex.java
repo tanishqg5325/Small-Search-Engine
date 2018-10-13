@@ -15,8 +15,8 @@ public class PageIndex
 		{
 			if(temp.obj.getWord().equals(str))
 			{
-				try { temp.obj.addPosition(p); return; }
-				catch(RuntimeException ex) { throw ex; }
+				temp.obj.addPosition(p);
+				return;
 			}
 			temp = temp.next;
 		}
