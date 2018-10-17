@@ -8,6 +8,7 @@ public class PageEntry
 	private PageIndex index;
 	private int number_of_words;
 	private MySet<String> connectorWords = new MySet<String>();
+	private Vector<String> page_words;
 	
 	// Read this file, and create the page index.
 	public PageEntry(String pageName)
@@ -15,6 +16,7 @@ public class PageEntry
 		this.pageName = pageName;
 		index = new PageIndex();
 		number_of_words = 0;
+		page_words = new Vector<String>();
 		connectorWords.addElement("a"); connectorWords.addElement("an"); connectorWords.addElement("the"); connectorWords.addElement("they");
 		connectorWords.addElement("these"); connectorWords.addElement("this"); connectorWords.addElement("for"); connectorWords.addElement("is");
 		connectorWords.addElement("are"); connectorWords.addElement("was"); connectorWords.addElement("of"); connectorWords.addElement("or");
@@ -39,8 +41,9 @@ public class PageEntry
 							else if(words[i].equals("structures")) words[i] = "structure";
 							else if(words[i].equals("applications")) words[i] = "application";
 							Position p = new Position(this, wordIndex);
-							index.addPositionForWord(words[i],p);
+							index.addPositionForWord(words[i], p);
 							number_of_words++;
+							page_words.add(words[i]);
 						}
 						wordIndex++;
 					}
@@ -83,7 +86,7 @@ public class PageEntry
 		if(wordEntry == null) return 0;
 		int fwp = wordEntry.getAllPositionsForThisWord().size();
 		//if(word.equals("function"))
-			//System.out.println(pageName + " " + fwp + " " + number_of_words);
+		//	System.out.println(pageName + " " + fwp + " " + index.getWordEntries().size() + " " + number_of_words);
 		return ((float)(fwp))/number_of_words;
 	}
 }

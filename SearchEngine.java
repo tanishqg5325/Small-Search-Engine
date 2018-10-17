@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.*;
 
 public class SearchEngine
 {
@@ -23,59 +23,30 @@ public class SearchEngine
 	float getInverseDocumentFrequency(String word)
 	{
 		int N = pages.size();
-		WordEntry wordEntry = ipi.getEntryFromWord(word);
-		if(wordEntry == null) return Float.MAX_VALUE;
-		MyLinkedList<Position>.Node pos = wordEntry.getAllPositionsForThisWord().head;
-		MySet<PageEntry> webPages = new MySet<PageEntry>();
-		while(pos != null)
-		{
-			try { webPages.addElement(pos.obj.getPageEntry()); }
-			catch(RuntimeException e) {}
-			pos = pos.next;
-		}
-		int nwp = webPages.size();
+		int nwp = ipi.getPagesWhichContainWord(word).size();
+		if(nwp == 0) return Float.MAX_VALUE;
 		float ans = ((float)N)/nwp;
 		return (float)Math.log(ans);
 	}
+
+	public float getRelevanceOfPage(String[] str, boolean doTheseWordsRepresentAPhrase)
+	{
+		return 0f;
+	}
 	
-	MyLinkedList<PageEntry> getSortedResults(MySet<PageEntry> webPages, String word)
+	ArrayList<SearchResult> getSortedSearchResults(MySet<PageEntry> webPages, String word)
 	{
 		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
-		MyLinkedList<PageRelevance> page_relevances = new MyLinkedList<PageRelevance>();
-		float inv_doc_freq = getInverseDocumentFrequency(word);
-		float rel = tmp.obj.getTermFrequency(word) * inv_doc_freq;
-		page_relevances.Insert(new PageRelevance(tmp.obj, rel));
-		MyLinkedList<PageRelevance>.Node start;
-		tmp = tmp.next;
+		MySet<SearchResult> search_results = new MySet<SearchResult>();
+		float inv_doc_freq = getInverseDocumentFrequency(word), rel;
 		while(tmp != null)
 		{
-			start = page_relevances.head;
 			rel = tmp.obj.getTermFrequency(word) * inv_doc_freq;
-			MyLinkedList<PageRelevance>.Node pr = page_relevances.new Node(new PageRelevance(tmp.obj, rel));
-			page_relevances.size++;
-			if(rel >= start.obj.getRelevance())
-			{
-				pr.next = start;
-				start.prev = pr;
-				page_relevances.head = pr;
-				tmp = tmp.next;
-				continue;
-			}
-			while(start.next != null && start.next.obj.getRelevance() > rel)
-				start = start.next;
-			pr.next = start.next; pr.prev = start;
-			if(start.next != null) start.next.prev = pr;
-			start.next = pr;
+			search_results.addElement(new SearchResult(tmp.obj, rel));
 			tmp = tmp.next;
 		}
-		MyLinkedList<PageEntry> ans = new MyLinkedList<PageEntry>();
-		start = page_relevances.head;
-		while(start != null)
-		{
-			ans.Insert(start.obj.getPageEntry());
-			start = start.next;
-		}
-		return ans;
+		MySort<SearchResult> sorted = new MySort<SearchResult>();
+		return sorted.sortThisList(search_results);
 	}
 	
 	boolean contains(MySet<PageEntry> pgs, String doc)
@@ -122,13 +93,11 @@ public class SearchEngine
 				System.out.println("No webpage contains word " + x);
 			else
 			{
-				MyLinkedList<PageEntry>.Node tmp = getSortedResults(pageSet, x).head;
-				while(tmp.next != null)
-				{
-					System.out.print(tmp.obj.getName() + ", ");
-					tmp = tmp.next;
-				}
-				System.out.println(tmp.obj.getName());
+				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, x);
+				int n = search_results.size();
+				for(int i=0;i<n-1;i++)
+					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
+				System.out.println(search_results.get(n-1).getPageEntry().getName());
 			}
 		}
 		

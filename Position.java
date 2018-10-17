@@ -1,4 +1,4 @@
-public class Position
+public class Position implements Comparable<Position>
 {
 	// represents a tuple <page p, word position i>.
 	private PageEntry p;
@@ -17,6 +17,11 @@ public class Position
 		if(tmp == null) return false;
 		return (p.equals(tmp.getPageEntry()) && wordIndex == tmp.getWordIndex());
 	}
+
+	public int compareTo(Position pos) 
+    { 
+        return wordIndex - pos.getWordIndex(); 
+    }
 	
 	public PageEntry getPageEntry()
 	{
