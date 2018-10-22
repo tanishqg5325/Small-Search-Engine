@@ -15,6 +15,7 @@ public class MyLinkedList<X>
 	
 	public MyLinkedList()
 	{
+		head = tail = null;
 		size = 0;
 	}
 	

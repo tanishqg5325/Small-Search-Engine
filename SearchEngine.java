@@ -19,6 +19,14 @@ public class SearchEngine
 		else if(str.equals("applications")) str = "application";
 		return str;
 	}
+
+	String[] processString(String[] str)
+	{
+		int n = str.length;
+		for(int i = 0; i<n; i++)
+			str[i] = processString(str[i]);
+		return str;
+	}
 	
 	float getInverseDocumentFrequency(String word)
 	{
@@ -29,19 +37,30 @@ public class SearchEngine
 		return (float)Math.log(ans);
 	}
 
-	public float getRelevanceOfPage(String[] str, boolean doTheseWordsRepresentAPhrase)
+	public float getRelevanceOfPage(PageEntry page, String[] str, boolean doTheseWordsRepresentAPhrase)
 	{
-		return 0f;
+		float ans = 0;
+		int n = str.length;
+		if(doTheseWordsRepresentAPhrase == false)
+		{
+			for(int i=0;i<n;i++)
+				ans += (page.getTermFrequency(str[i]) * getInverseDocumentFrequency(str[i]));
+		}
+		else
+		{
+
+		}
+		return ans;
 	}
 	
-	ArrayList<SearchResult> getSortedSearchResults(MySet<PageEntry> webPages, String word)
+	ArrayList<SearchResult> getSortedSearchResults(MySet<PageEntry> webPages, String[] words, boolean doTheseWordsRepresentAPhrase)
 	{
 		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
 		MySet<SearchResult> search_results = new MySet<SearchResult>();
-		float inv_doc_freq = getInverseDocumentFrequency(word), rel;
+		float rel;
 		while(tmp != null)
 		{
-			rel = tmp.obj.getTermFrequency(word) * inv_doc_freq;
+			rel = getRelevanceOfPage(tmp.obj, words, doTheseWordsRepresentAPhrase);
 			search_results.addElement(new SearchResult(tmp.obj, rel));
 			tmp = tmp.next;
 		}
@@ -88,12 +107,13 @@ public class SearchEngine
 		{
 			String x = query[1];
 			x = processString(x);
+			String[] str = new String[1]; str[0] = x;
 			MySet<PageEntry> pageSet = ipi.getPagesWhichContainWord(x);
 			if(pageSet.size() == 0)
 				System.out.println("No webpage contains word " + x);
 			else
 			{
-				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, x);
+				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
 				int n = search_results.size();
 				for(int i=0;i<n-1;i++)
 					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
@@ -132,6 +152,57 @@ public class SearchEngine
 			for(int i=0;i<n-1;i++)
 				System.out.print(v.get(i) + ", ");
 			System.out.println(v.get(n-1));
+		}
+
+		else if(query.length > 1 && query[0].equals("queryFindPagesWhichContainAllWords"))
+		{
+			String[] str = Arrays.copyOfRange(query, 1, query.length);
+			str = processString(str);
+			MySet<PageEntry> pageSet = ipi.getPagesWhichContainAllWords(str);
+			if(pageSet.size() == 0)
+				System.out.println("No webpage contains all the given words");
+			else
+			{
+				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
+				int n = search_results.size();
+				for(int i=0;i<n-1;i++)
+					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
+				System.out.println(search_results.get(n-1).getPageEntry().getName());
+			}
+		}
+
+		else if(query.length > 1 && query[0].equals("queryFindPagesWhichContainAnyOfTheseWords"))
+		{
+			String[] str = Arrays.copyOfRange(query, 1, query.length);
+			str = processString(str);
+			MySet<PageEntry> pageSet = ipi.getPagesWhichContainAnyOfTheseWords(str);
+			if(pageSet.size() == 0)
+				System.out.println("No webpage contains any of the given words");
+			else
+			{
+				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
+				int n = search_results.size();
+				for(int i=0;i<n-1;i++)
+					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
+				System.out.println(search_results.get(n-1).getPageEntry().getName());
+			}
+		}
+
+		else if(query.length > 1 && query[0].equals("queryFindPagesWhichContainPhrase"))
+		{
+			String[] str = Arrays.copyOfRange(query, 1, query.length);
+			str = processString(str);
+			MySet<PageEntry> pageSet = ipi.getPagesWhichContainPhrase(str);
+			if(pageSet.size() == 0)
+				System.out.println("No webpage contains the given phrase");
+			else
+			{
+				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, true);
+				int n = search_results.size();
+				for(int i=0;i<n-1;i++)
+					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
+				System.out.println(search_results.get(n-1).getPageEntry().getName());
+			}
 		}
 		
 		else

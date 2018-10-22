@@ -3,12 +3,12 @@ public class WordEntry
 	// For a string str, this class stores the list
 	// of word indice's where str is present in the document(s).
 	private String word;
-	private MyLinkedList<Position> entry; 
+	private AVL<Position> entry; 
 	
 	public WordEntry(String word)
 	{
 		this.word = word;
-		entry = new MyLinkedList<Position>();
+		entry = new AVL<Position>();
 	}
 	
 	public boolean equals(Object w)
@@ -41,13 +41,13 @@ public class WordEntry
 	
 	MyLinkedList<Position> getAllPositionsForThisWord()
 	{
-		return entry;
+		return entry.getElements();
 	}
 	
 	WordEntry Clone()
 	{
 		WordEntry new_word = new WordEntry(word);
-		new_word.entry = entry.Clone();
+		new_word.addPositions(getAllPositionsForThisWord());
 		return new_word;
 	}
 }

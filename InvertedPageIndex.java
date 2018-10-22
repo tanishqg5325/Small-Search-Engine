@@ -69,7 +69,7 @@ public class InvertedPageIndex
 		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
 		while(tmp != null)
 		{
-
+			
 			tmp = tmp.next;
 		}
 		return webPages;
