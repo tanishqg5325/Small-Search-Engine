@@ -7,6 +7,7 @@ public class PageEntry
 	private String pageName;
 	private PageIndex index;
 	private int number_of_words;
+	private AVL<Position> non_connector_indexes;
 	private MySet<String> connectorWords = new MySet<String>();
 	
 	// Read this file, and create the page index.
@@ -15,6 +16,7 @@ public class PageEntry
 		this.pageName = pageName;
 		index = new PageIndex();
 		number_of_words = 0;
+		non_connector_indexes = new AVL<Position>();
 		connectorWords.addElement("a"); connectorWords.addElement("an"); connectorWords.addElement("the"); connectorWords.addElement("they");
 		connectorWords.addElement("these"); connectorWords.addElement("this"); connectorWords.addElement("for"); connectorWords.addElement("is");
 		connectorWords.addElement("are"); connectorWords.addElement("was"); connectorWords.addElement("of"); connectorWords.addElement("or");
@@ -41,6 +43,7 @@ public class PageEntry
 							Position p = new Position(this, wordIndex);
 							index.addPositionForWord(words[i], p);
 							number_of_words++;
+							non_connector_indexes.Insert(p);
 						}
 						wordIndex++;
 					}
@@ -85,5 +88,53 @@ public class PageEntry
 		//if(word.equals("function"))
 			//System.out.println(pageName + " " + fwp + " " + index.getWordEntries().size() + " " + number_of_words);
 		return ((float)(fwp))/number_of_words;
+	}
+
+	private WordEntry getEntryFromWord(String word)
+	{
+		MyLinkedList<WordEntry>.Node tmp = index.getWordEntries().head;
+		while(tmp != null)
+		{
+			if(tmp.obj.getWord().equals(word))
+				return tmp.obj;
+			tmp = tmp.next;
+		}
+		return null;
+	}
+
+	public int containsPhrase(String[] str)
+	{
+		int n = str.length, i,freq = 0;
+		WordEntry w;
+		WordEntry[] words = new WordEntry[n];
+		for(i=0;i<n;i++)
+		{
+			w = getEntryFromWord(str[i]);
+			if(w == null) return freq;
+			words[i] = w;
+		}
+		MyLinkedList<Position>.Node tmp = words[0].getAllPositionsForThisWord().head;
+		while(tmp != null)
+		{
+			Position curr = tmp.obj;
+			for(i=1;i<n;i++)
+			{
+				curr = non_connector_indexes.inOrderSuccessor(curr);
+				if(curr == null)
+					break;
+				if(!words[i].getTreeForThisWord().isMember(curr))
+					break;
+			}
+			if(i == n) freq++;
+			tmp = tmp.next;
+		}
+		return freq;
+	}
+
+	public float getTermFrequencyForPhrase(String[] str)
+	{
+		int k = str.length, m = containsPhrase(str);
+		int deno = number_of_words - m * (k - 1);
+		return ((float)m)/deno; 
 	}
 }

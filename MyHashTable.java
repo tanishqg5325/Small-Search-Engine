@@ -28,7 +28,7 @@ public class MyHashTable
 	// This adds an entry to the hashtable: stringName(w) - > positionList(w). If no word-entry
 	// exists, then create a new word entry. However, if a word-entry exists,
 	// then merge w with the existing word-entry.
-	void addPositionsForWord(WordEntry w)
+	public void addPositionsForWord(WordEntry w)
 	{
 		int index = getHashIndex(w.getWord());
 		if(hashTable[index] == null)
@@ -52,7 +52,7 @@ public class MyHashTable
 		}
 	}
 	
-	WordEntry searchWord(String str)
+	public WordEntry searchWord(String str)
 	{
 		int index = getHashIndex(str);
 		if(hashTable[index] == null) return null;

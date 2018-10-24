@@ -28,7 +28,7 @@ public class Position implements Comparable<Position>
 		return p;
 	}
 	
-	int getWordIndex()
+	public int getWordIndex()
 	{
 		return wordIndex;
 	}

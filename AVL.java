@@ -22,7 +22,7 @@ public class AVL<X extends Comparable<X>>
 		if(r == null) return null;
 		if(r.data.compareTo(d) == 0)
 			return r;
-		if(root.data.compareTo(d) < 0)
+		if(r.data.compareTo(d) < 0)
 			return find(r.right, d);
 		return find(r.left, d);		
 	}
@@ -110,7 +110,10 @@ public class AVL<X extends Comparable<X>>
 				root = x;
 			Node leftx = x.left, rightx = x.right;
 			x.left = z; x.right = y;
+			y.parent = z.parent = x;
 			z.right = leftx; y.left = rightx;
+			if(leftx != null) leftx.parent = z;
+			if(rightx != null) rightx.parent = y;
 			int h = y.height;
 			x.height = h; y.height = z.height = h-1;
 		}
@@ -127,7 +130,9 @@ public class AVL<X extends Comparable<X>>
 				root = y;
 			Node lefty = y.left;
 			y.left = z; y.right = x;
+			z.parent = x.parent = y;
 			z.right = lefty;
+			if(lefty != null) lefty.parent = z; 
 			int h = y.height;
 			x.height = z.height = h-1;
 		}
@@ -144,7 +149,10 @@ public class AVL<X extends Comparable<X>>
 				root = x;
 			Node leftx = x.left, rightx = x.right;
 			x.left = y; x.right = z;
+			y.parent = z.parent = x;
 			y.right = leftx; z.left = rightx;
+			if(leftx != null) leftx.parent = y;
+			if(rightx != null) rightx.parent = z;
 			int h = y.height;
 			x.height = h; y.height = z.height = h-1;
 		}
@@ -161,7 +169,9 @@ public class AVL<X extends Comparable<X>>
 				root = y;
 			Node righty = y.right;
 			y.left = x; y.right = z;
+			z.parent = x.parent = y;
 			z.left = righty;
+			if(righty != null) righty.parent = z; 
 			int h = y.height;
 			x.height = z.height = h-1;
 		}
@@ -202,5 +212,29 @@ public class AVL<X extends Comparable<X>>
 		MyLinkedList<X> list = new MyLinkedList<X>();
 		inOrder(root, list);
 		return list;
+	}
+
+	public X inOrderSuccessor(X d)
+	{
+		Node n = find(root, d);
+		if(n != null)
+		{
+			if(n.right != null)
+			{
+				Node ans = n.right;
+				while(ans.left != null)
+					ans = ans.left;
+				return ans.data;
+			}
+			else
+			{
+				Node ans = n;
+				while(ans.parent != null && ans.parent.right == ans)
+					ans = ans.parent;
+				if(ans.parent == null) return null;
+				return ans.parent.data;
+			}
+		}
+		return null;
 	}
 }

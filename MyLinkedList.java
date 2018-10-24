@@ -74,16 +74,4 @@ public class MyLinkedList<X>
 	{
 		return size;
 	}
-	
-	MyLinkedList<X> Clone()
-	{
-		MyLinkedList<X> new_list = new MyLinkedList<X>();
-		Node tmp = head;
-		while(tmp != null)
-		{
-			new_list.Insert(tmp.obj);
-			tmp = tmp.next;
-		}
-		return new_list;
-	}
 }

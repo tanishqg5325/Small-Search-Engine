@@ -8,7 +8,7 @@ public class InvertedPageIndex
 	}
 	
 	// Add a new page entry p to the inverted page index.
-	void addPage(PageEntry p)
+	public void addPage(PageEntry p)
 	{
 		MyLinkedList<WordEntry>.Node tmp = p.getPageIndex().getWordEntries().head;
 		while(tmp != null)
@@ -17,9 +17,14 @@ public class InvertedPageIndex
 			tmp = tmp.next;
 		}
 	}
+
+	public WordEntry getEntryFromWord(String str)
+	{
+		return hashTable.searchWord(str);
+	}
 	
 	// Return a set of page-entries of webpages which contain the word str.
-	MySet<PageEntry> getPagesWhichContainWord(String str)
+	public MySet<PageEntry> getPagesWhichContainWord(String str)
 	{
 		MySet<PageEntry> page_entries = new MySet<PageEntry>();
 		WordEntry entry = getEntryFromWord(str);
@@ -33,13 +38,8 @@ public class InvertedPageIndex
 		}
 		return page_entries;
 	}
-	
-	WordEntry getEntryFromWord(String str)
-	{
-		return hashTable.searchWord(str);
-	}
 
-	MySet<PageEntry> getPagesWhichContainAllWords(String[] words)
+	public MySet<PageEntry> getPagesWhichContainAllWords(String[] words)
 	{
 		MySet<PageEntry> and_pages = new MySet<PageEntry>();
 		if(words.length == 0) return and_pages;
@@ -52,7 +52,7 @@ public class InvertedPageIndex
 		return and_pages;
 	}
 
-	MySet<PageEntry> getPagesWhichContainAnyOfTheseWords(String[] words)
+	public MySet<PageEntry> getPagesWhichContainAnyOfTheseWords(String[] words)
 	{
 		MySet<PageEntry> or_pages = new MySet<PageEntry>();
 		if(words.length == 0) return or_pages;
@@ -62,16 +62,18 @@ public class InvertedPageIndex
 		return or_pages;
 	}
 	
-	MySet<PageEntry> getPagesWhichContainPhrase(String[] str)
+	public MySet<PageEntry> getPagesWhichContainPhrase(String[] str)
 	{
 		MySet<PageEntry> webPages = getPagesWhichContainAllWords(str);
 		if(webPages.size() == 0) return webPages;
 		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
+		MySet<PageEntry> phrasePages = new MySet<PageEntry>();
 		while(tmp != null)
 		{
-			
+			if(tmp.obj.containsPhrase(str) > 0)
+				phrasePages.addElement(tmp.obj);
 			tmp = tmp.next;
 		}
-		return webPages;
+		return phrasePages;
 	}
 }

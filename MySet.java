@@ -12,14 +12,14 @@ public class MySet<X>
 		return set.IsMember(o);
 	}
 	
-	void addElement(X element)
+	public void addElement(X element)
 	{
 		if(set.IsMember(element))
 			throw new RuntimeException("Error - Object is already in the set");
 		set.Insert(element);
 	}
 	
-	MySet<X> union(MySet<X> otherSet)
+	public MySet<X> union(MySet<X> otherSet)
 	{
 		MySet<X> union = new MySet<X>();
 		MyLinkedList<X>.Node temp = set.head;
@@ -38,7 +38,7 @@ public class MySet<X>
 		return union;
 	}
 	
-	MySet<X> intersection(MySet<X> otherSet)
+	public MySet<X> intersection(MySet<X> otherSet)
 	{
 		MySet<X> intersection = new MySet<X>();
 		MyLinkedList<X>.Node temp = set.head;
@@ -50,12 +50,12 @@ public class MySet<X>
 		return intersection;
 	}
 	
-	MyLinkedList<X> getElements()
+	public MyLinkedList<X> getElements()
 	{
 		return set;
 	}
 	
-	int size()
+	public int size()
 	{
 		return set.size();
 	}

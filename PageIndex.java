@@ -8,7 +8,7 @@ public class PageIndex
 		words = new MyLinkedList<WordEntry>();
 	}
 	
-	void addPositionForWord(String str, Position p)
+	public void addPositionForWord(String str, Position p)
 	{
 		MyLinkedList<WordEntry>.Node temp = words.head;
 		while(temp != null)
@@ -25,7 +25,7 @@ public class PageIndex
 		words.Insert(new_word);
 	}
 	
-	MyLinkedList<WordEntry> getWordEntries()
+	public MyLinkedList<WordEntry> getWordEntries()
 	{
 		return words;
 	}

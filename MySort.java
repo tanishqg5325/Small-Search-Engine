@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class MySort<Sortable extends Comparable<Sortable>>
 {
 	// sorts the set in descending order
-	ArrayList<Sortable> sortThisList(MySet<Sortable> listOfSortableEntries)
+	public ArrayList<Sortable> sortThisList(MySet<Sortable> listOfSortableEntries)
 	{
 		MyLinkedList<Sortable>.Node tmp = listOfSortableEntries.getElements().head;
 		ArrayList<Sortable> sortedList = new ArrayList<Sortable>();

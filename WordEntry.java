@@ -19,12 +19,12 @@ public class WordEntry
 		return word.equals(entry.getWord());
 	}
 	
-	void addPosition(Position position)
+	public void addPosition(Position position)
 	{
 		entry.Insert(position);
 	}
 	
-	void addPositions(MyLinkedList<Position> positions)
+	public void addPositions(MyLinkedList<Position> positions)
 	{
 		MyLinkedList<Position>.Node temp = positions.head;
 		while(temp != null)
@@ -34,17 +34,22 @@ public class WordEntry
 		}
 	}
 	
-	String getWord()
+	public String getWord()
 	{
 		return word;
 	}
 	
-	MyLinkedList<Position> getAllPositionsForThisWord()
+	public MyLinkedList<Position> getAllPositionsForThisWord()
 	{
 		return entry.getElements();
 	}
+
+	public AVL<Position> getTreeForThisWord()
+	{
+		return entry;
+	}
 	
-	WordEntry Clone()
+	public WordEntry Clone()
 	{
 		WordEntry new_word = new WordEntry(word);
 		new_word.addPositions(getAllPositionsForThisWord());

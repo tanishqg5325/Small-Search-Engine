@@ -11,7 +11,7 @@ public class SearchEngine
 		pages = new MySet<PageEntry>();
 	}
 	
-	String processString(String str)
+	private String processString(String str)
 	{
 		str = str.toLowerCase();
 		if(str.equals("stacks")) str = "stack";
@@ -20,7 +20,7 @@ public class SearchEngine
 		return str;
 	}
 
-	String[] processString(String[] str)
+	private String[] processString(String[] str)
 	{
 		int n = str.length;
 		for(int i = 0; i<n; i++)
@@ -28,7 +28,7 @@ public class SearchEngine
 		return str;
 	}
 	
-	float getInverseDocumentFrequency(String word)
+	private float getInverseDocumentFrequency(String word)
 	{
 		int N = pages.size();
 		int nwp = ipi.getPagesWhichContainWord(word).size();
@@ -37,7 +37,16 @@ public class SearchEngine
 		return (float)Math.log(ans);
 	}
 
-	public float getRelevanceOfPage(PageEntry page, String[] str, boolean doTheseWordsRepresentAPhrase)
+	private float getInverseDocumentFrequencyForPhrase(String[] str)
+	{
+		int N = pages.size();
+		int nwp = ipi.getPagesWhichContainPhrase(str).size();
+		if(nwp == 0) return Float.MAX_VALUE;
+		float ans = ((float)N)/nwp;
+		return (float)Math.log(ans);	
+	}
+
+	private float getRelevanceOfPage(PageEntry page, String[] str, boolean doTheseWordsRepresentAPhrase)
 	{
 		float ans = 0;
 		int n = str.length;
@@ -48,12 +57,12 @@ public class SearchEngine
 		}
 		else
 		{
-
+			ans = page.getTermFrequencyForPhrase(str) * getInverseDocumentFrequencyForPhrase(str);
 		}
 		return ans;
 	}
 	
-	ArrayList<SearchResult> getSortedSearchResults(MySet<PageEntry> webPages, String[] words, boolean doTheseWordsRepresentAPhrase)
+	private ArrayList<SearchResult> getSortedSearchResults(MySet<PageEntry> webPages, String[] words, boolean doTheseWordsRepresentAPhrase)
 	{
 		MyLinkedList<PageEntry>.Node tmp = webPages.getElements().head;
 		MySet<SearchResult> search_results = new MySet<SearchResult>();
@@ -68,7 +77,7 @@ public class SearchEngine
 		return sorted.sortThisList(search_results);
 	}
 	
-	boolean contains(MySet<PageEntry> pgs, String doc)
+	private boolean contains(MySet<PageEntry> pgs, String doc)
 	{
 		MyLinkedList<PageEntry>.Node tmp = pgs.getElements().head;
 		while(tmp != null)
@@ -79,10 +88,19 @@ public class SearchEngine
 		}
 		return false;
 	}
+
+	private void printPages(ArrayList<SearchResult> search_results)
+	{
+		int n = search_results.size();
+		for(int i=0;i<n-1;i++)
+			System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
+		System.out.println(search_results.get(n-1).getPageEntry().getName());
+	}
 	
-	void performAction(String actionMessage)
+	public void performAction(String actionMessage)
 	{
 		String[] query = actionMessage.split("\\s");
+		//System.out.print(actionMessage + ": ");
 		if(query.length == 2 && query[0].equals("addPage"))
 		{
 			if(contains(pages, query[1]))
@@ -114,10 +132,7 @@ public class SearchEngine
 			else
 			{
 				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
-				int n = search_results.size();
-				for(int i=0;i<n-1;i++)
-					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
-				System.out.println(search_results.get(n-1).getPageEntry().getName());
+				printPages(search_results);
 			}
 		}
 		
@@ -164,10 +179,7 @@ public class SearchEngine
 			else
 			{
 				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
-				int n = search_results.size();
-				for(int i=0;i<n-1;i++)
-					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
-				System.out.println(search_results.get(n-1).getPageEntry().getName());
+				printPages(search_results);
 			}
 		}
 
@@ -181,10 +193,7 @@ public class SearchEngine
 			else
 			{
 				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, false);
-				int n = search_results.size();
-				for(int i=0;i<n-1;i++)
-					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
-				System.out.println(search_results.get(n-1).getPageEntry().getName());
+				printPages(search_results);
 			}
 		}
 
@@ -198,14 +207,12 @@ public class SearchEngine
 			else
 			{
 				ArrayList<SearchResult> search_results = getSortedSearchResults(pageSet, str, true);
-				int n = search_results.size();
-				for(int i=0;i<n-1;i++)
-					System.out.print(search_results.get(i).getPageEntry().getName() + ", ");
-				System.out.println(search_results.get(n-1).getPageEntry().getName());
+				printPages(search_results);
 			}
 		}
 		
 		else
 			System.out.println("Error - Invalid Input");
+		//System.out.println("");
 	}
 }
