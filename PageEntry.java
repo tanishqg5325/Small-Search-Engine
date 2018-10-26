@@ -30,23 +30,27 @@ public class PageEntry
 			{
 				String str = s.nextLine();
 				str = str.toLowerCase();
-				String[] words = str.split("\\s++|\\{|}|[|]|<|>|\\(|\\)|\\.|,|;|'|\"|\\?|#|!|-|:");
-				int size = words.length;
-				for(int i=0;i<size;i++)
-					if(words[i].length() > 0)
+				str = str.replace('{', ' ').replace('}', ' ').replace('[', ' ').replace(']', ' ');
+				str = str.replace('<', ' ').replace('>', ' ').replace('=', ' ').replace('(', ' ');
+				str = str.replace(')', ' ').replace('.', ' ').replace(',', ' ').replace(';', ' ');
+				str = str.replace('\'', ' ').replace('"', ' ').replace('?', ' ').replace('#', ' ');
+				str = str.replace('!', ' ').replace('-', ' ').replace(':', ' ');
+				Scanner t = new Scanner(str);
+				while(t.hasNext())
+				{
+					String word = t.next();
+					if(!connectorWords.IsMember(word))
 					{
-						if(!connectorWords.IsMember(words[i]))
-						{
-							if(words[i].equals("stacks")) words[i] = "stack";
-							else if(words[i].equals("structures")) words[i] = "structure";
-							else if(words[i].equals("applications")) words[i] = "application";
-							Position p = new Position(this, wordIndex);
-							index.addPositionForWord(words[i], p);
-							number_of_words++;
-							non_connector_indexes.Insert(p);
-						}
-						wordIndex++;
+						if(word.equals("stacks")) word = "stack";
+						else if(word.equals("structures")) word = "structure";
+						else if(word.equals("applications")) word = "application";
+						Position p = new Position(this, wordIndex);
+						index.addPositionForWord(word, p);
+						non_connector_indexes.Insert(p);
+						number_of_words++;
 					}
+					wordIndex++;
+				}
 			}
 		}
 		catch (FileNotFoundException e) { throw new RuntimeException("Error - File not found"); }

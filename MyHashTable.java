@@ -8,7 +8,7 @@ public class MyHashTable
 	@SuppressWarnings("unchecked")
 	public MyHashTable()
 	{
-		size = 1000;
+		size = 100000;
 		hashTable = new MyLinkedList[size];
 	}
 	
